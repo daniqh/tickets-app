@@ -1,45 +1,34 @@
 <?php
-
-use Illuminate\Database\Seeder;
+use Faker\Generator;
 use App\Entities\User;
 use Faker\Factory as Faker;
-
-class UserTableSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+class UserTableSeeder extends BaseSeeder {
+    public function getModel()
+    {
+        return new User();
+    }
+    public function getDummyData(Generator $faker, array $customValues = array())
+    {
+        return [
+            'first_name' => $faker->name,
+            'last_name'=>$faker->lastName,
+            'email' => $faker->email,
+            'password'  => bcrypt('secret')
+        ];
+    }
     public function run()
     {
         $this->createAdmin();
-        $this->createUsers(50);
-
+        $this->createMultiple(50);
     }
-
-    private function createAdmin(){
-        User::create([
-            'first_name'=>'Daniel',
-            'last_name'=>'Quintero',
-            'email'=>'dani.q.h@gmail.com',
-            'password'=>bcrypt('admin'),
-          // 'role'=>'admin'
-        ]);
-    }
-
-    private function createUsers($total)
+    private function createAdmin()
     {
-        $faker = Faker::create();
-
-        for ($i = 1; $i <= $total; $i++) {
-            User::create([
-                'first_name' => $faker->name,
-                'last_name' => $faker->lastName,
-                'email' => $faker->email,
-                'password' => bcrypt('secret')
-            ]);
-        }
+        $this->create([
+            'first_name' => 'Daniel',
+            'last_name' => 'Quintero',
+            'email' => 'dani.q.h@gmail.com',
+            'password' => bcrypt('admin')
+        ]);
     }
 }
 
