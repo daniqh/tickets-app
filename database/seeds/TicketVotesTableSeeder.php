@@ -1,20 +1,21 @@
 <?php
 
-use App\Entities\Ticket;
+use App\Entities\TicketVote;
 
-class TicketTableSeeder extends BaseSeeder
+class TicketVoteTableSeeder extends BaseSeeder
 {
+    protected $total = 250;
+
     public function getModel()
     {
-        return new Ticket();
+        return new TicketVote();
     }
 
     public function getDummyData(\Faker\Generator $faker, array $customValues = array())
     {
         return [
-            'title' => $faker->sentence(),
-            'status' => $faker->randomElement(['open', 'open', 'closed']),
             'user_id' => $this->getRandom('User')->id,
+            'ticket_id' => $this->getRandom('Ticket')->id,
         ];
     }
 }

@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Model::unguard();
@@ -20,12 +15,14 @@ class DatabaseSeeder extends Seeder
             'password_resets',
             'tickets',
             'ticket_votes',
-            'ticket_comments'
+            'ticket_comments',
 
         ));
 
         $this->call(UserTableSeeder::class);
         $this->call(TicketTableSeeder::class);
+        $this->call(TicketVoteTableSeeder::class);
+        $this->call(TicketCommentsTableSeeder::class);
     }
 
     private function truncateTables(array $tables)
@@ -43,7 +40,7 @@ class DatabaseSeeder extends Seeder
 
     private function checkForeignKeys($check)
     {
-        $check=$check?'1' : '0';
+        $check = $check ? '1' : '0';
         DB::statement('SET FOREIGN_KEY_CHECKS='.$check);
     }
 }
