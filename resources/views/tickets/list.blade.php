@@ -140,7 +140,7 @@
                                 <span class="glyphicon glyphicon-thumbs-down"></span> No Vote
                             </a>
 
-                            <a href="http://prueba.com/application /45">
+                            <a href="http://prueba.com/application/45">
                                 <span class="votes-count">8 votes</span>
                                 - <span class="comments-count">5 comments</span>.
                             </a>
