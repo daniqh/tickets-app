@@ -16,16 +16,8 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                    {!! Html::menu('tickets.menu') !!}
+                    @include('layouts.partials.login')
 
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Daniel Quintero <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="http://prueba.com/auth/logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
