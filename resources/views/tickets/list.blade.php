@@ -7,14 +7,14 @@
             <div class="col-md-10 col-md-offset-1">
                 <div class="row">
                     <h1>
-                        Solicitudes Recientes
-                        <a href="#" class="btn btn-primary">
-                            Nueva solicitud
+                        Tickets List
+                        <a href="{{ route('tickets.create') }}" class="btn btn-primary">
+                           Add ticket
                         </a>
                     </h1>
 
                     <p class="label label-info news">
-                        Hay {{ $tickets->total() }} Solicitudes Recientes
+                       There are {{ $tickets->total() }} Tickets
                     </p>
 
                     @foreach($tickets as $ticket)

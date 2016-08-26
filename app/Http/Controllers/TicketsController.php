@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
 use App\Entities\Ticket;
-use App\Entities\TicketComments;
-use App\Http\Requests;
-
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\Request;
 
 class TicketsController extends Controller
 {
@@ -32,9 +32,31 @@ class TicketsController extends Controller
         return view('tickets/list', compact('tickets'));
     }
 
-    public function details($id)
+    public function details($id, Guard $auth)
     {
         $ticket=Ticket::findOrFail($id);
-        return view('tickets/details',compact('ticket'));
+        $user=$auth->user();
+
+        return view('tickets.details',compact('ticket','user'));
     }
+
+    public function create()
+    {
+        return view('tickets.create');
+    }
+
+    public function store(Request $request, Guard $auth)
+    {
+        $this->validate($request, [
+            'title' => 'required|max:120'
+        ]);
+
+        $ticket = $auth->user()->tickets()->create([
+            'title'  => $request->get('title'),
+            'status' => 'open'
+        ]);
+
+        return Redirect::route('tickets.details', $ticket->id);
+    }
+
 }

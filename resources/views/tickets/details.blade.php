@@ -7,55 +7,77 @@
             <div class="col-md-10 col-md-offset-1">
                 <h2 class="title-show">
                     {{ $ticket->title }}
-                    @include('tickets/partials/status', compact('ticket'))
+                    @include('tickets.partials.status', compact('ticket'))
                 </h2>
+                @if (Session::has('sucess'))
+                    <div class="alert alert-success">
+                        {{Session::get('sucess')}}
+                    </div>
+                @endif
+
                 <p class="date-t">
                     <span class="glyphicon glyphicon-time"></span> {{ $ticket->created_at->format('d/m/y h:ia') }}
+                    - {{ $ticket->author->first_name }}
                 </p>
                 <h4 class="label label-info news">
-                    {{ $ticket->voters->count() }} Voters </h4>
+                    {{ count($ticket->voters) }} votes
+                </h4>
 
                 <p class="vote-users">
-                    <span class="label label-info">Eddie Reilly I</span>
-                    <span class="label label-info">Letha Marks</span>
-                    <span class="label label-info">Orpha Quitzon</span>
-                    <span class="label label-info">Orpha Quitzon</span>
-                    <span class="label label-info">Orpha Quitzon</span>
-                    <span class="label label-info">Prof. Robbie Russel V</span>
-                    <span class="label label-info">Juanita Senger</span>
-                    <span class="label label-info">Geo Armstrong PhD</span>
-                    <span class="label label-info">Prof. Ruthe Keebler I</span>
+                    @foreach($ticket->voters as $user)
+                        <span class="label label-info">{{ $user->name }}</span>
+                    @endforeach
                 </p>
 
-                <form method="POST" action="http://prueba.com/votar/5" accept-charset="UTF-8"><input name="_token" type="hidden" value="VBIv3EWDAIQuLRW0cGwNQ4OsDKoRhnK2fAEF6UbQ">
-                    <!--button type="submit" class="btn btn-primary">Votar</button-->
+                @if (Auth::check())
+                    @if ( !auth()->user()->hasVoted($ticket))
+                {!! Form::open(['route' => ['votes.submit', $ticket->id], 'method' => 'POST']) !!}
                     <button type="submit" class="btn btn-primary">
                         <span class="glyphicon glyphicon-thumbs-up"></span> Vote
                     </button>
-                </form>
-
+                    {!! Form::close() !!}
+                    @else
+                    {!! Form::open(['route' => ['votes.destroy', $ticket->id], 'method' => 'DELETE']) !!}
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-thumbs-up"></span> unvote
+                    </button>
+                {!! Form::close() !!}
+                    @endif
+                @endif
                 <h3>Add Comment</h3>
+                @include('layouts.partials.errors')
+
+                {!! Form::open(['route' => ['comments.submit', $ticket->id], 'method' => 'POST']) !!}
+                <div class="form-group">
+                    <label for="comment">Comments:</label>
+                    <textarea rows="4" class="form-control" name="comment" cols="50" id="comment" value="{{ old('comment') }}"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="link">Link:</label>
+                    <input class="form-control" name="link" type="text" id="link">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                {!! Form::close() !!}
 
 
-                <form method="POST" action="http://prueba.com/comentar/5" accept-charset="UTF-8"><input name="_token" type="hidden" value="VBIv3EWDAIQuLRW0cGwNQ4OsDKoRhnK2fAEF6UbQ">
-                    <div class="form-group">
-                        <label for="comment"> Comment :</label>
-                        <textarea rows="4" class="form-control" name="comment" cols="50" id="comment"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="link">Links:</label>
-                        <input class="form-control" name="link" type="text" id="link">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
 
-                <h3>{{ $ticket->comments()->count() }} Comments</h3>
+                <h3>Comments ({{ count($ticket->comments) }})</h3>
 
                 @foreach ($ticket->comments as $comment)
                     <div class="well well-sm">
                         <p><strong>{{ $comment->user->first_name }}</strong></p>
                         <p>{{ $comment->comment }}</p>
-                        <p class="date-t"><span class="glyphicon glyphicon-time"></span> 01/04/2015 12:21am</p>
+                        @if ($comment->link)
+                            <p>
+                                <a href="{{$comment->link}}" rel="nofollow">
+                                    {{$comment->link}}
+                                </a>
+                            </p>
+                       @endif
+                        <p class="date-t">
+                            <span class="glyphicon glyphicon-time"></span>
+                            {{ $comment->created_at->format('d/m/Y h:ia') }}
+                        </p>
                     </div>
                 @endforeach
             </div>

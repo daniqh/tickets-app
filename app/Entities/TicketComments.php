@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketComments extends Entity
 {
+    protected $fillable=['comment','link'];
+
     public function ticket()
     {
         return $this->belongsTo(Ticket::getClass());
